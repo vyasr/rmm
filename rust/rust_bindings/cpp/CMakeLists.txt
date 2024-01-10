@@ -12,35 +12,8 @@
 # the License.
 # =============================================================================
 
-cmake_minimum_required(VERSION 3.26.4 FATAL_ERROR)
+add_library(rmm_shim STATIC src/cuda_memory_resource.cpp)
 
-set(rmm_version 24.02.00)
+target_include_directories(rmm_shim PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-project(
-  rmm_rust_bindings
-  VERSION ${rmm_version}
-  LANGUAGES CXX
-)
-
-find_package(rmm ${rmm_version} REQUIRED)
-
-# ##################################################################################################
-# * library targets -------------------------------------------------------------------------------
-
-add_library(
-  rmm_rust_bindings
-  STATIC
-  src/cuda_memory_resource.cpp
-)
-
-# Specify include paths for the current target and dependents
-target_include_directories(
-  rmm_rust_bindings
-  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include"
-)
-
-# Specify the target module library dependencies
-target_link_libraries(
-  rmm_rust_bindings
-  PUBLIC rmm::rmm
-)
+target_link_libraries(rmm_shim PUBLIC rmm::rmm)
